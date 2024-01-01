@@ -62,9 +62,22 @@ func main() {
 	}()
 
 	// Главный поток записывает данные в канал
-	for i := 1; i <= 1000; i++ {
-		dataChannel <- fmt.Sprintf("Data %d", i)
-		time.Sleep(time.Millisecond * 100)
+	//for i := 1; i <= 1000; i++ {
+	//	dataChannel <- fmt.Sprintf("Data %d", i)
+	//	time.Sleep(time.Millisecond * 100)
+	//}
+
+	i := 0
+L:
+	for {
+		select {
+		case <-ctx.Done():
+			break L
+		default:
+			dataChannel <- fmt.Sprintf("Data %d", i)
+			time.Sleep(time.Second)
+
+		}
 	}
 
 	fmt.Println("All workers have exited. Program terminated.")
